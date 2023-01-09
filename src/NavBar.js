@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useContext} from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -6,12 +6,10 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
-import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import Switch from '@mui/material/Switch';
 import {ThemeContext} from "./contexts/ThemeContext";
-import {Component} from "react";
-import {withLanguageContext} from "./contexts/LanguageContext";
+import {LanguageContext} from "./contexts/LanguageContext";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -69,46 +67,44 @@ const content = {
         flag: "🇪🇸"
     }
 };
-class NavBar extends Component {
-    static contextType = ThemeContext
-    render () {
-        const {isDarkMode, toggleTheme} = this.context
-        const {language} = this.props.languageContext
-        const { search, flag } = content[language]
-        return (
-            <Box sx={{ flexGrow: 1 }}>
-                <AppBar position="static" color={isDarkMode ? "default" : "primary"}>
-                    <Toolbar>
-                        <IconButton
-                            size="large"
-                            edge="start"
-                            color="inherit"
-                            sx={{ mr: 2 }}
-                        >
-                            <span>{flag}</span>
-                        </IconButton>
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="div"
-                            sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-                        >
-                            Context App
-                        </Typography>
-                        <Switch onChange={toggleTheme}/>
-                        <Search>
-                            <SearchIconWrapper>
-                                <SearchIcon />
-                            </SearchIconWrapper>
-                            <StyledInputBase
-                                placeholder={`${search}...`}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </Search>
-                    </Toolbar>
-                </AppBar>
-            </Box>
-        );
-    }
+function NavBar () {
+    const { isDarkMode, toggleTheme } = useContext(ThemeContext)
+    const { language } = useContext(LanguageContext)
+    const { search, flag } = content[language]
+
+    return (
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static" color={isDarkMode ? "default" : "primary"}>
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        sx={{ mr: 2 }}
+                    >
+                        <span>{flag}</span>
+                    </IconButton>
+                    <Typography
+                        variant="h6"
+                        noWrap
+                        component="div"
+                        sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                    >
+                        Context App
+                    </Typography>
+                    <Switch onChange={toggleTheme}/>
+                    <Search>
+                        <SearchIconWrapper>
+                            <SearchIcon />
+                        </SearchIconWrapper>
+                        <StyledInputBase
+                            placeholder={`${search}...`}
+                            inputProps={{ 'aria-label': 'search' }}
+                        />
+                    </Search>
+                </Toolbar>
+            </AppBar>
+        </Box>
+    );
 }
-export default withLanguageContext(NavBar)
+export default NavBar
